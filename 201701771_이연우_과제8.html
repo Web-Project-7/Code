@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Yeonu LEE | SIGN UP</title>
+        <script>
+            function Confirm_Info(){
+                var Confirm_data = /^[a-zA-Z0-9]{4,12}$/;
+                var Email_Confirm_data = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+                var Name_Confirm_data = /^[가-힣]{2,15}$/;
+         
+                var User_ID_data = document.getElementById("User_ID");
+                var User_Password_data = document.getElementById("User_Password");
+                var User_Password_data2 = document.getElementById("User_Password_Confirm");
+                var User_Email_data = document.getElementById("User_Email");
+                var User_Name_Data = document.getElementById("Name");
+ 
+                if(User_ID_data.value==''){
+                    alert("ID를 입력해주세요.");
+                    return false;
+                }
+                if(!Confirm_data.test(User_ID_data.value)){ 
+                    alert("ID는 4~12자의 영문 대소문자와 숫자로만 입력이 가능합니다.");        
+                    return false;
+                }
+                
+                if(User_Password_data.value==''){ 
+                    alert("Password를 입력해주세요.");
+                    return false;
+                }
+                if(!Confirm_data.test(User_Password_data.value)){ 
+                    alert("Password는 4~12자의 영문 대소문자와 숫자로만 입력이 가능합니다.");
+                    return false;
+                }
+
+                if(User_Password_data2.value!=User_Password_data.value){ 
+                    alert("비밀번호가 틀립니다.");
+                    return false;
+                }
+                
+                if(Email_Confirm_data.value == ''){ 
+                    alert("이메일을 입력해주세요.");
+                    return false;
+                }
+
+                if(!Email_Confirm_data.test(User_Email_data.value)){
+                    alert("이메일 형식을 확인해주세요.");
+                    return false;
+                }
+                if(User_Name_Data.value ==''){
+                    alert("이름을 입력해주세요.");
+                    return false;
+                }
+                if(!Name_Confirm_data.test(User_Name_Data.value)){
+                    alert("이름은 한글만 입력이 가능합니다.");
+                    return false;
+                }   
+                alert("회원가입이 완료되었습니다.");
+            }
+        </script>
+    </head>
+    <header>
+        <h1 style="text-align:center;">Yeonu Lee | SIGN UP</h1>
+        <h3 style="text-align:center;"><a href="201701771_이연우_과제4_1.html" target="_self">돌아가기</a></h3>
+        <hr></hr>
+    </header>
+    <body>
+        <form name="fo" method="POST">
+            <h3>회원정보 입력</h3>
+            <label><input type="text" id="Name" size="47" placeholder="Name">&nbsp;</label><br><br>
+            <label><input type="text" id="User_ID" size="47" placeholder="User ID"></label><br><br>
+            <label><input type="password" id="User_Password" size="20" placeholder="Password">&nbsp;
+                <input type="password" id="User_Password_Confirm" size="20" placeholder="Confirm"></label>
+                <br><br>
+                <h3>부가정보 입력</h3>
+            <label>성별선택&nbsp;&nbsp;<input type="radio" name="Sex_radio" value="1">남
+                <input type="radio" name="Sex_radio" value="2">여<br><br></label>
+            <label>생년원일&nbsp;<input type="date" value="2021-01-01"><br><br></label>
+            <label>E-Mail&nbsp;&nbsp;&nbsp;<input type="email" id="User_Email" size="25" placeholder="id@google.co.kr" style="text-align: end;"><br><br> </label>
+            <label><input type="submit" value="완료" onclick="Confirm_Info()">&nbsp;&nbsp;
+                <input type="reset" value="초기화"></label>
+        </form>
+    </body>
+</html>
