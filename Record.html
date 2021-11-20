@@ -1,3 +1,292 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>헬퍼_기록</title>
+		<link rel="stylesheet" href="style.css">
+		<style type="text/css">
+		    a { color:#000000;text-decoration:none; }
+		    .scriptCalendar { text-align:center; }
+		    .scriptCalendar > thead > tr > td { width:60px; height:60px;}
+		    .scriptCalendar > thead > tr:first-child > td { font-weight:bold; font-size: 20px;}
+		    .scriptCalendar > thead > tr:last-child > td { color: #466093;font-weight:bold; background-color:#D6F0FF}
+		    .scriptCalendar > tbody > tr > td { width:60px;height:60px; }
+		    
+		</style>
+		<script type="text/javascript">	
+			//로컬스토리지에 담을 일정 배열
+			var dolist = new Array();
+			
+			// 윈도우 시작시 로컬 스토리지에서 값을 가져오고 달력을 출력합니다.
+			window.onload=function start(){
+			// localStorage.clear(); 
+				var check = localStorage.getItem("localworklist");
+			    if(check!=null){
+			    	var storedStorage = JSON.parse(check);
+			        for(var i=0;i<storedStorage.length;i++){
+			        	var newId = dolist.length+1;
+			        	var obj={
+			            	id:newId, year:storedStorage[i].year, month:storedStorage[i].month, date:storedStorage[i].date,
+			                work:storedStorage[i].work
+			            };
+			         dolist.push(obj);
+			         localStorage.setItem("localworklist",JSON.stringify(dolist));
+			    	}
+			    }
+			    Calendar();
+			};
+			
+			var today = new Date();
+			var date = new Date();
+			
+			// 지난 달
+			function prev() {
+				this.today = new Date(today.getFullYear(), today.getMonth()-1, today.getDate());
+			    Calendar();
+			}
+			
+			// 다음 달
+			function next() {
+			    this.today = new Date(today.getFullYear(), today.getMonth()+1, today.getDate());
+			    Calendar();
+			}
+			
+			// 달력 생성
+			function Calendar() {
+			    var nowMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+			    // 0일은 다음달의 마지막 날
+			    var lastDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+			    var tbday = document.querySelector(".scriptCalendar > tbody");
+			
+			    document.getElementById("calYear").innerHTML = today.getFullYear();
+			    document.getElementById("calMonth").innerHTML = today.getMonth() + 1;
+			    
+			    if(today.getMonth()+1==12) {
+					document.getElementById("prev").innerHTML=("◀"+today.getMonth())+"월";
+					document.getElementById("next").innerHTML="1월"+"▶";
+						
+				}
+				else if(today.getMonth()+1==1) {
+					document.getElementById("prev").innerHTML="◀"+"12월";
+					document.getElementById("next").innerHTML=(today.getMonth()+2)+"월" +"▶";
+				}
+				else {
+					document.getElementById("prev").innerHTML="◀"+(today.getMonth())+"월";
+					document.getElementById("next").innerHTML=(today.getMonth()+2)+"월"+"▶";
+				}
+				
+			    // 기존에 있던 달력을 삭제 후 다시 새로 생성
+			    while(tbday.rows.length > 0) {
+			    	tbday.deleteRow(tbday.rows.length - 1);
+			    }
+              
+			    // 본격적으로 셀을 추가하며 달력 생성
+			    var row = tbday.insertRow();
+			    var tmp = 1;
+			    // 한달이 며칠
+			    var daylen = (Math.ceil((nowMonth.getDay() + lastDate.getDate()) / 7) * 7) - nowMonth.getDay();
+			
+			    // 날짜만큼 셀 추가
+			    for(var day = 1 - nowMonth.getDay(); day <= daylen; day++) {
+			    	// 1일 전의 셀들은 공백으로
+			        var column = row.insertCell();
+                    var str="";
+                    
+                    // 날짜 추가
+			        if(Math.sign(day) == 1 && day <= lastDate.getDate()) {
+			        	// 이 부분은 일정이 추가 되었을 때 달력에 표시하기 위해 날짜 id를 생성하려 했으나 실패했습니다..
+                        str += "<div>"+day+"</div>";
+                        str += "<div id='"+day+"'></div>";
+			            column.innerHTML = str;
+			            
+			            // 일요일
+			            if(tmp % 7 == 1) {
+			                column.style.color = "RED";
+			            }
+			            // 토요일
+			            if(tmp % 7 == 0) {
+			                column.style.color = "BLUE";
+			                row = tbday.insertRow();
+			            }
+			        }
+                    
+                  	// 오늘 날짜 노란색 색칠
+			        if(today.getFullYear() == date.getFullYear() && 
+			        		today.getMonth() == date.getMonth() && date.getDate() == day) {
+				        column.style.backgroundColor = "#FFE08C";
+			    	    column.style.cursor = "pointer";
+			            column.onclick = function(){ checkDay(this); }
+			        }
+                  	// 다른 날짜 하얀색 색칠
+			        else{
+			            column.style.backgroundColor = "#FFFFFF";
+			            column.style.cursor = "pointer";
+			            column.onclick = function(){ checkDay(this);}
+			        }
+			        tmp++;
+			    }
+			}
+			
+			var realdate="";
+			var realyear="";
+			var realmonth="";
+			
+			// 날짜(셀)가 선택 되었을 때
+			function checkDay(column) {
+				// 이미 선택된 날짜가 있을 때 다시 흰색으로 색칠
+			    if(document.getElementsByClassName("dayCheck")[0]) {
+			        document.getElementsByClassName("dayCheck")[0].style.backgroundColor = "#FFFFFF";
+			        document.getElementsByClassName("dayCheck")[0].classList.remove("dayCheck");
+			    }
+              
+			    column.style.backgroundColor = "#FFA7A7";
+			    var year=document.getElementById("calYear").innerHTML;
+			    var month=document.getElementById("calMonth").innerHTML;
+			    var date = column.innerText;
+              
+			    // 날짜가 아닌 날을 클릭했을 경우
+			    if(date==""){
+			        column.style.backgroundColor = "#FFFFFF";
+			        column.classList.remove("dayCheck");
+			    }
+			    else {
+			        realdate=date;
+			        realyear=year;
+			        realmonth=month;
+			        loadlist(year,month,date);
+			        column.classList.add("dayCheck");
+			    }
+			}
+			
+			// 날짜 별로 일정을 가져오기
+			function loadlist(year,month){			
+				document.getElementById("list").innerHTML="";
+			    var check = localStorage.getItem("localworklist");
+              
+			    if(check!=null){
+			    	var storedStorage = JSON.parse(check);
+                  
+			        for(var i=0;i<storedStorage.length;i++){
+			        	if(storedStorage[i].year==year&&storedStorage[i].month==month&&storedStorage[i].date==realdate){
+				            var li = document.createElement("li");
+				            var del=document.createElement("button");
+				            li.id=storedStorage[i].id;
+				            var delUni = '<input type="button" onClick="Deletes(this)" value="삭제"/>';
+				            li.innerHTML=storedStorage[i].work+" "+delUni+"<hr>";
+				            var ol = document.getElementById("list");
+				            ol.appendChild(li);
+				            
+			           }
+					}
+				}
+			}
+			
+			// 일정 지우기
+			function Deletes(obj){	
+				var p = obj.parentElement;
+			    var pp = p.parentElement;
+			    pp.removeChild(p);
+			    var key = p.id;
+                
+			    for(var i = 0; i < dolist.length;i++){
+				    if(key == dolist[i].id){
+				    	dolist.splice(i,1);
+			        }
+			        localStorage.setItem("localworklist",JSON.stringify(dolist));
+			    }
+			    alert("삭제되었습니다");
+			    
+			}
+			
+			// 일정 추가하기
+			function Addwork(){			
+				var inputwork = document.getElementById("work");
+			    var year=document.getElementById("calYear").innerHTML;
+			    var month=document.getElementById("calMonth").innerHTML;
+			    var date = realdate;
+			    
+			    if(inputwork.value!=""){
+				    if(date==""){
+			    	    alert("날짜를 선택해주세요");
+			      	}
+			    	else {
+				    	var newId = dolist.length+1;
+				    	var li = document.createElement("li");			
+				    	var del=document.createElement("button");
+						li.id=newId;
+						var save=document.createElement("button");
+						var delUni = '<input type="button" onClick="Deletes(this)" value="삭제"/>';
+						li.innerHTML=inputwork.value+" "+delUni+"<hr>";
+						var ol = document.getElementById("list");
+						ol.appendChild(li);
+						var obj={
+							id:newId, year:year, month:month, date:date, work:work.value
+						};
+						dolist.push(obj);
+						localStorage.setItem("localworklist",JSON.stringify(dolist));
+						alert("할 일이 추가되었습니다");
+					}
+				}
+				inputwork.value="";
+			}	
+		</script>
+	</head>
+	
+	<body>
+		<article id="article">
+			<table class="scriptCalendar">
+				<thead>
+					<tr>
+					<td onClick="prev();" style="cursor:pointer;" id="prev"></td>
+					<td colspan="5">
+					<span id="calYear"></span>년
+					<span id="calMonth"></span>월
+					</td>
+					<td onClick="next();" style="cursor:pointer;" id="next"></td>
+					</tr>
+					<tr>
+					<td>일</td><td>월</td><td>화</td><td>수</td><td>목</td><td>금</td><td>토</td>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<span>
+				<input type="text" id="work" placeholder="운동기록추가">
+				<input id="addexcer" type="button" value="운동 기록 추가하기" onclick="Addwork()"></button>			
+			</span>	
+			<form id ="listfield" style="overflow:auto;">
+				<p id="list"></p>
+			</form>
+		</article>
+		<footer class="nav">
+			<ul class="nav__list">
+				<li class="nav__btn">
+					<a class="nav__link" href="Health.html"><i class="fas fa-dumbbell fa-2x"></i></a>
+				</li>
+					<li class="nav__btn">
+					<a class="nav__link" href="Record.html"><i class="far fa-clipboard fa-2x"></i></a>
+				</li>
+				<li class="nav__btn">
+					<a class="nav__link" href="Weight.html"><i class="fas fa-weight fa-2x"></i></a>
+				</li>
+				<li class="nav__btn">
+					<a class="nav__link" href="Community.html"><i class="fas fa-user fa-2x"></i></a>
+				</li>
+				<li class="nav__btn">
+					<a class="nav__link" href="Information.html"><i class="fas fa-info-circle fa-2x"></i></a>
+				</li>
+			</ul>
+		</footer>
+		<script src="https://kit.fontawesome.com/840353c2e4.js" crossorigin="anonymous"></script>
+	</body>
+</html>
+
+<!--
+ 달력 날짜들 text-align으로 위로 올리고 div 아이디 받아서 같이 로컬스토리지에 저장시키고 로컬 스토리지가 없을 때는 다 X로 하고,
+ 로컬 스토리지 있으면 O하기.
+ -->
+=======
 <!DOCTYPE html>
 	<html>
 	<head>
@@ -264,3 +553,4 @@
  달력 날짜들 text-align으로 위로 올리고 div 아이디 받아서 같이 로컬스토리지에 저장시키고 로컬 스토리지가 없을 때는 다 X로 하고,
  로컬 스토리지 있으면 O하기.
  */
+>>>>>>> 9b4feb7e02e9e8b263ea7a553d33683b60bd4b55

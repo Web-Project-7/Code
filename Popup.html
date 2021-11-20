@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>헬퍼_운동 추가 하기</title>
+    <script>
+        var list = [];
+        function Select_routine(id){
+            var tmp = document.getElementById(id);
+            
+            list.push(tmp.innerHTML);
+            if(tmp.style.backgroundColor=="darkgray"){
+                tmp.style.backgroundColor="#ffffff";
+                var i = 0;
+                while(i < list.length){
+                    if(tmp.innerHTML == list[i]){
+                        list.splice(i,1);
+                        i--;
+                    }
+                    i++;
+                }
+            }
+            else{
+                tmp.style.backgroundColor="darkgray";
+            }          
+            console.log(list);
+        }
+    </script>
+</head>
+<body>
+    <form method="get" action="Health.html">
+        <p>루틴 이름</p><br>
+        <input type="text" id="routine"></input>
+        <p>운동 부위</p><br>
+        <label onclick="Select_routine(this.id)" id="1">가슴</label>
+        <label onclick="Select_routine(this.id)" id="2">어깨</label>
+        <label onclick="Select_routine(this.id)" id="3">등</label>
+        <label onclick="Select_routine(this.id)" id="4">복근</label>
+        <label onclick="Select_routine(this.id)" id="5">전신</label>
+        <label onclick="Select_routine(this.id)" id="6">엉덩이</label>
+        <label onclick="Select_routine(this.id)" id="7">하체</label>
+        <input type="submit" value="운동 추가">
+    </form>
+</body>
+</html>
+
+<!--jsp request.getParameter(), action => target-->

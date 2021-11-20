@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>헬퍼_운동</title>
+    <script>
+        var time = 0;
+            var running = 0;
+            var timerid = 0;
+            function startPause() {
+                if (running == 0) {
+                    
+                    //시작버튼
+                    running = 1;
+                    increment();
+                    document.getElementById('stopTime').innerHTML="";
+                    document.getElementById("start").innerHTML = "일시중지";
+                    document.getElementById("startPause").style.backgroundColor = "red";
+                    document.getElementById("startPause").style.borderColor = "red";
+    
+                }
+                else {
+                    //일시정시버튼
+                    running = 0;
+                    clearTimeout(timerid);
+                    var date = new Date();
+                    var nowDate = date.getDate();
+                    var nowMonth = date.getMonth() + 1;
+                    var hour = date.getHours();
+                    if(hour<10){
+                        hour = '0'+hour;
+                    }
+                    var min = date.getMinutes();
+                    if(min<10){
+                        min = '0'+min;
+                    } 
+                    var sec = date.getSeconds();
+                    if(sec<10){
+                        sec = '0'+sec;
+                    }
+                    document.getElementById('stopTime').innerHTML= "일시정지  "+nowMonth+"/"+nowDate+" "+hour+":"+min+":"+sec;
+                    document.getElementById("start").innerHTML = "계속";
+                    document.getElementById("startPause").style.backgroundColor = "green";
+                    document.getElementById("startPause").style.borderColor = "green";
+                }
+            }
+            //리셋
+            function reset() {
+                running = 0;
+                time = 0;
+                clearTimeout(timerid);
+                document.getElementById('stopTime').innerHTML="";
+                document.getElementById("start").innerHTML = "시작";
+                document.getElementById("output").innerHTML = "<b>00:00:00</b>";
+                document.getElementById("startPause").style.backgroundColor = "green";
+                document.getElementById("startPause").style.borderColor = "green";
+            }
+            //타이머 시간측정 
+            function increment() {
+                if (running == 1) {
+                    timerid = setTimeout(function () {
+                        time++;
+                        var hours = Math.floor(time / 3600 );
+                        var mins = Math.floor(time % 3600 / 60 );
+                        var secs = time % 3600 % 60;
+                        if (hours < 10) {
+                            hours = "0" + hours;
+                        }
+                        if (mins < 10) {
+                            mins = "0" + mins;
+                        }
+                        if (secs < 10) {
+                            secs = "0" + secs;
+                        }
+                        document.getElementById("output").innerHTML = "<b>"+hours + ":" + mins + ":" + secs+"</b>";
+                        increment();
+                    }, 1000)
+                }
+            }
+    </script>
+    
+</head>
+<body>
+    <header class="header">
+        <p>
+            <h1 id="clock" style="color:gray;"></h1>
+        </p>
+            <div class="containerMrs">
+                <p id="output"><b>00:00:00</b></p>
+                <div id="controls" text-align="center">
+                    <button id="startPause" onclick="startPause()"><b id="start">시작</b></button>
+                    <button onclick="reset()" id="reset"><b id="reset">리셋</b></button>
+                </div>
+            </div>
+            <p>
+                <h1 id=stopTime></h1>
+                <h1 id="breaktime"></h1>
+            </p>
+    
+        <hr>
+        <p onclick="window.open('Popup.html','운동선택','width=430,height=500,location=no,status=no,scrollbars=no');"> 오늘의 운동 추가하기 </p>
+        <ul id="excerlist"></ul>
+    </header>
+    <main id="main">
+        <button id=resetBtn>초기화</button>
+    </main>
+    <footer class="nav">
+        <ul class="nav__list">
+            <li class="nav__btn">
+                <a class="nav__link" href="Health.html"><i class="fas fa-dumbbell fa-2x"></i></a>
+            </li>
+                <li class="nav__btn">
+                <a class="nav__link" href="Record.html"><i class="far fa-clipboard fa-2x"></i></a>
+            </li>
+            <li class="nav__btn">
+                <a class="nav__link" href="Weight.html"><i class="fas fa-weight fa-2x"></i></a>
+            </li>
+            <li class="nav__btn">
+                <a class="nav__link" href="Community.html"><i class="fas fa-user fa-2x"></i></a>
+            </li>
+            <li class="nav__btn">
+                <a class="nav__link" href="Information.html"><i class="fas fa-info-circle fa-2x"></i></a>
+            </li>
+        </ul>
+    </footer>
+    <script src="https://kit.fontawesome.com/840353c2e4.js" crossorigin="anonymous"></script>
+</body>
+</html>
+
+<!-- 운동을 추가하지 않으면 타이머 시작 못하게 해야함. 오늘의 운동 추가하기 아래에 list-->
